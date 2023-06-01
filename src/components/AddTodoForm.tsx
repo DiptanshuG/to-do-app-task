@@ -7,12 +7,13 @@ export const AddTodoForm: React.FC = () => {
   const [title, setTitle] = useState("");
   const { user, addTodo } = useContext(AuthContext);
 
+  console.log({user})
+
   const handleAddTodo = () => {
     if (title.trim() !== "") {
       const newTodo: Todo = {
         id: uuidv4(),
         title: title,
-
         completed: false,
         subTasks: [],
       };

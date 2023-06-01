@@ -27,7 +27,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [authenticated, setAuthenticated] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [verifyingAuth, setVerifyingAuth] = useState(true);
-  const navigate=useNavigate()
+  const navigate = useNavigate();
 
   const triggerAutoLogin = () => {
     getAccessToken()
@@ -36,13 +36,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         if (authToken) {
           setAuthenticated(!!authToken);
         }
-           navigate("/dashboard");
+        const userDataString = localStorage.getItem("TODO_APP");
+        if (userDataString) {
+          const userData = JSON.parse(userDataString);
+        
+          if (userData && userData.profile) {
+           
+            setUser(userData.profile);
+          }
+        }
+        navigate("/dashboard");
       })
       .finally(() => {
         setVerifyingAuth(false);
       });
   };
-  console.log({ authenticated });
+
+
+  console.log({ user });
+
+
   useEffect(() => {
     triggerAutoLogin();
   }, []);
@@ -50,10 +63,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const logout = () => {
     setAuthenticated(false);
     setUser(null);
-    clearAuthData()
+    clearAuthData();
   };
 
   const addTodo = (todo: Todo) => {
+    console.log({ todo, user });
     if (user) {
       const updatedUser = {
         ...user,
@@ -65,7 +79,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <AuthContext.Provider
-      value={{ authenticated, user, setAuthenticated, logout, addTodo,verifyingAuth }}
+      value={{
+        authenticated,
+        user,
+        setAuthenticated,
+        logout,
+        addTodo,
+        verifyingAuth,
+      }}
     >
       {children}
     </AuthContext.Provider>

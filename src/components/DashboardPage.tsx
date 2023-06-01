@@ -4,6 +4,7 @@ import { AuthContext } from "../context/AuthContext";
 import { Todo } from "../models/Todo";
 import { TodoItem } from "./TodoItem";
 import { AddTodoForm } from "./AddTodoForm";
+import { Container, Row, Col, Card, CardHeader, CardBody, Button } from "reactstrap";
 
 const DashboardPage: React.FC = () => {
   const { authenticated, logout, user } = useContext(AuthContext);
@@ -19,19 +20,39 @@ const DashboardPage: React.FC = () => {
   }
 
   return (
-    <div>
-      <h1>Dashboard</h1>
-      <h2>Welcome, {user?.name}!</h2>
-      <button onClick={handleLogout}>Logout</button>
+    <Container>
+      <Row>
+        <Col>
+          <Card>
+            <CardHeader>
+              <h1>Dashboard</h1>
+              <h2>Welcome, {user?.name}!</h2>
+            </CardHeader>
+            <CardBody>
+              <Button color="primary" onClick={handleLogout}>
+                Logout
+              </Button>
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
 
-      <h3>Todos:</h3>
-      {user?.todos.map((todo: Todo) => (
-        <TodoItem key={todo.id} todo={todo} />
-      ))}
+      <Row>
+        <Col>
+          <h3>Todos:</h3>
+          {user?.todos.map((todo: Todo) => (
+            <TodoItem key={todo.id} todo={todo} />
+          ))}
+        </Col>
+      </Row>
 
-      <h3>Add Todo:</h3>
-      <AddTodoForm />
-    </div>
+      <Row>
+        <Col>
+          <h3>Add Todo:</h3>
+          <AddTodoForm />
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

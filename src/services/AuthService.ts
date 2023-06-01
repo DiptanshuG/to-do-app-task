@@ -64,7 +64,10 @@ export const mockSignIn = (username: string, password: string) => {
         token: "Nt6rAWNtAVSr7U83uGJzNt6rAWNtAVSr7U83uGJzNt6rAWNtAVSr7U83uGJz",
       },
       profile: {
-        username,
+        id: "admin",
+        name: "Admin",
+        email: "admin@example.com",
+        todos: [], 
       },
       expires: new Date().getTime() + 10000 * 1000,
     });
