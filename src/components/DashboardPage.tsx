@@ -27,7 +27,7 @@ const DashboardPage: React.FC = () => {
         <Row className="mt-4">
           <Col>
             <h1 className="text-primary">Your Todo List</h1>
-            <h2 className="text-secondary">Welcome, {user?.name}!</h2>
+       
             <p className="text-muted">
               Stay organized and boost your productivity with our simple and
               intuitive Todo app.
