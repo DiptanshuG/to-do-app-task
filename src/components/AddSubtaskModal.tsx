@@ -29,6 +29,7 @@ const AddSubtaskModal: React.FC<AddSubtaskModalProps> = ({
             placeholder="Enter subtask title"
             value={title}
             onChange={handleTitleChange}
+            required
           />
         </Form.Group>
       </Modal.Body>

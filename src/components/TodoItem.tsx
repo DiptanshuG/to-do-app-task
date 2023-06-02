@@ -85,7 +85,7 @@ export const TodoItem: React.FC<{ todo: Todo }> = ({ todo }) => {
           </OverlayTrigger>
 
           <div className="d-flex gap-2">
-            <Button onClick={handleAddSubtask}>Add Subtask Modal</Button>
+            <Button onClick={handleAddSubtask}>Add Subtask</Button>
             <DropdownButton
               id={`dropdown-button-${todo.id}`}
               title={<BsTrash />}

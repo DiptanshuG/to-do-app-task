@@ -1,6 +1,7 @@
 import React from "react";
 import { Navbar, Nav, Button, Dropdown } from "react-bootstrap";
 import logo from "../assets/img/todo_icon.png";
+import { BiUserCircle } from "react-icons/bi";
 
 interface User {
   name: string;
@@ -26,7 +27,15 @@ const AppNavbar: React.FC<AppNavbarProps> = ({ user, handleLogout }) => {
       <Navbar.Collapse id="navbar-nav" className="justify-content-end">
         <Nav className="mx-4">
           <Navbar.Text className="ml-auto gap-3">
-            <span className="mx-4"> Welcome, {userName}!</span>
+            <span className="mx-4">
+              {" "}
+              Welcome,{" "}
+              <span className="mx- 4">
+                {" "}
+                <BiUserCircle className="ml-2 mb-1" />
+                {userName}!
+              </span>
+            </span>
             {user && (
               <Button variant="primary" onClick={handleLogout} className="ml-2">
                 Logout

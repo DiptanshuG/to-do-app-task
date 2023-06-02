@@ -40,7 +40,11 @@ export const AddTodoForm: React.FC = () => {
             />
           </Col>
           <Col sm={3}>
-            <Button type="submit" variant="primary">
+            <Button
+              className="w-100 mt-2 mt-sm-0"
+              type="submit"
+              variant="primary"
+            >
               Add Todo
             </Button>
           </Col>
