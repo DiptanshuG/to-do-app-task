@@ -15,7 +15,6 @@ const getLocalStorage = () => {
   return null;
 };
 
-
 export const clearAuthData = () => {
   let store = getLocalStorage();
   var key = AUTH_LOCAL_STORAGE_KEYNAME;
@@ -67,7 +66,7 @@ export const mockSignIn = (username: string, password: string) => {
         id: "admin",
         name: "Admin",
         email: "admin@example.com",
-        todos: [], 
+        todos: [],
       },
       expires: new Date().getTime() + 10000 * 1000,
     });

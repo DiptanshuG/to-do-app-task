@@ -29,6 +29,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [verifyingAuth, setVerifyingAuth] = useState(true);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    // Check if the user data is available and update the state
+    const userDataString = localStorage.getItem("TODO_APP");
+    if (userDataString) {
+      const userData = JSON.parse(userDataString);
+      if (userData && userData.profile) {
+        setUser(userData.profile);
+      }
+    }
+  }, [authenticated]);
+
   const triggerAutoLogin = () => {
     getAccessToken()
       .then((authToken) => {
@@ -39,9 +50,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         const userDataString = localStorage.getItem("TODO_APP");
         if (userDataString) {
           const userData = JSON.parse(userDataString);
-        
+
           if (userData && userData.profile) {
-           
             setUser(userData.profile);
           }
         }
@@ -51,10 +61,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setVerifyingAuth(false);
       });
   };
-
-
-  console.log({ user });
-
 
   useEffect(() => {
     triggerAutoLogin();

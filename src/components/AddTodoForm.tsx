@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { AuthContext } from "../context/AuthContext";
 import { Todo } from "../models/Todo";
@@ -6,10 +6,25 @@ import { Form, Button, Row, Col, Alert, Toast } from "react-bootstrap";
 
 export const AddTodoForm: React.FC = () => {
   const [title, setTitle] = useState("");
-  const { addTodo } = useContext(AuthContext);
+  const { addTodo, user } = useContext(AuthContext);
   const [showToast, setShowToast] = useState(false);
 
-  const handleAddTodo = () => {
+  useEffect(() => {
+    const storedTodos = localStorage.getItem("todos");
+    if (storedTodos) {
+      const parsedTodos: Todo[] = JSON.parse(storedTodos);
+      parsedTodos.forEach((todo) => addTodo(todo));
+    }
+  }, []); // Run once on component mount
+
+  useEffect(() => {
+    if (user?.todos?.length ?? 0 > 0) {
+      localStorage.setItem("todos", JSON.stringify(user?.todos));
+    }
+  }, [user?.todos]);
+
+  const handleAddTodo = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (!title) {
       setShowToast(true);
       return;
@@ -25,10 +40,9 @@ export const AddTodoForm: React.FC = () => {
       setTitle("");
     }
   };
-
   return (
     <div>
-      <Form>
+      <Form onSubmit={handleAddTodo}>
         <Row className="align-items-center">
           <Col sm={9}>
             <Form.Control
@@ -39,7 +53,7 @@ export const AddTodoForm: React.FC = () => {
             />
           </Col>
           <Col sm={3}>
-            <Button onClick={handleAddTodo} variant="primary">
+            <Button type="submit" variant="primary">
               Add Todo
             </Button>
           </Col>

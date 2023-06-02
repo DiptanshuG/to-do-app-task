@@ -1,10 +1,5 @@
 import React from "react";
 import { Navbar, Nav, Button, Dropdown } from "react-bootstrap";
-import {
-  BsGearFill,
-  BsInfoCircleFill,
-  BsThreeDotsVertical,
-} from "react-icons/bs";
 import logo from "../assets/img/todo_icon.png";
 
 interface User {
