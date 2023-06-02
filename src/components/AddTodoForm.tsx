@@ -2,12 +2,11 @@ import React, { useContext, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { AuthContext } from "../context/AuthContext";
 import { Todo } from "../models/Todo";
+import { Form, Button, Row, Col } from "react-bootstrap";
 
 export const AddTodoForm: React.FC = () => {
   const [title, setTitle] = useState("");
-  const { user, addTodo } = useContext(AuthContext);
-
-  console.log({user})
+  const { addTodo } = useContext(AuthContext);
 
   const handleAddTodo = () => {
     if (title.trim() !== "") {
@@ -17,22 +16,28 @@ export const AddTodoForm: React.FC = () => {
         completed: false,
         subTasks: [],
       };
-      
-
       addTodo(newTodo);
       setTitle("");
     }
   };
 
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="Enter todo title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <button onClick={handleAddTodo}>Add Todo</button>
-    </div>
+    <Form>
+      <Row className="align-items-center">
+        <Col sm={9}>
+          <Form.Control
+            type="text"
+            placeholder="I will do this ..."
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </Col>
+        <Col sm={3}>
+          <Button onClick={handleAddTodo} variant="primary">
+            Add Todo
+          </Button>
+        </Col>
+      </Row>
+    </Form>
   );
 };
