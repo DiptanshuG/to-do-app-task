@@ -20,14 +20,17 @@ const DashboardPage: React.FC = () => {
     return null;
   }
 
+
+
   return (
     <>
       <AppNavbar handleLogout={handleLogout} user={user} />
-      <Container>
-        <Row className="mt-4">
+      <Container >
+       <div className="mt-2 rounded p-4" style={{background:"rgb(223, 220, 204)"}}>
+       <Row className="mt-4">
           <Col>
             <h1 className="text-primary">Your Todo List</h1>
-       
+
             <p className="text-muted">
               Stay organized and boost your productivity with our simple and
               intuitive Todo app.
@@ -39,23 +42,24 @@ const DashboardPage: React.FC = () => {
           </Col>
         </Row>
 
-        {!!user?.todos && user?.todos.length > 0 &&(
+        <Row className="mt-4">
+          <Col>
+          <h3 className="stylish-font">Add Todo:</h3>
+            <AddTodoForm />
+          </Col>
+        </Row>
+       </div>
+
+        {!!user?.todos && user?.todos.length > 0 && (
           <Row className="mt-4">
             <Col>
-              <h3>Todos:</h3>
+            <h3 className="stylish-font">Todos:</h3>
               {user?.todos.map((todo: Todo) => (
                 <TodoItem key={todo.id} todo={todo} />
               ))}
             </Col>
           </Row>
         )}
-
-        <Row className="mt-4">
-          <Col>
-            <h3>Add Todo:</h3>
-            <AddTodoForm />
-          </Col>
-        </Row>
       </Container>
     </>
   );

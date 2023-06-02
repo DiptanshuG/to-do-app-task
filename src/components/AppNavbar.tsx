@@ -14,7 +14,7 @@ interface AppNavbarProps {
 const AppNavbar: React.FC<AppNavbarProps> = ({ user, handleLogout }) => {
   const userName = user?.name || "Guest";
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
+    <Navbar bg="dark" variant="dark" expand="lg" className="sticky-top">
       <div className="m-2">
         {" "}
         <img style={{ height: "2rem", width: "2rem" }} src={logo} alt="" />

@@ -9,20 +9,6 @@ export const AddTodoForm: React.FC = () => {
   const { addTodo, user } = useContext(AuthContext);
   const [showToast, setShowToast] = useState(false);
 
-  useEffect(() => {
-    const storedTodos = localStorage.getItem("todos");
-    if (storedTodos) {
-      const parsedTodos: Todo[] = JSON.parse(storedTodos);
-      parsedTodos.forEach((todo) => addTodo(todo));
-    }
-  }, []); // Run once on component mount
-
-  useEffect(() => {
-    if (user?.todos?.length ?? 0 > 0) {
-      localStorage.setItem("todos", JSON.stringify(user?.todos));
-    }
-  }, [user?.todos]);
-
   const handleAddTodo = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!title) {
@@ -40,6 +26,7 @@ export const AddTodoForm: React.FC = () => {
       setTitle("");
     }
   };
+
   return (
     <div>
       <Form onSubmit={handleAddTodo}>

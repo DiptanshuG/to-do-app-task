@@ -1,8 +1,9 @@
 import React, { createContext, useState, useEffect } from "react";
 import { User } from "../models/User";
-import { Todo } from "../models/Todo";
+import { Todo, SubTask } from "../models/Todo";
 import { clearAuthData, getAccessToken } from "../services/AuthService";
 import { useNavigate } from "react-router-dom";
+import lodash from "lodash";
 
 interface AuthContextProps {
   authenticated: boolean;
@@ -11,15 +12,14 @@ interface AuthContextProps {
   logout: () => void;
   addTodo: (todo: Todo) => void;
   verifyingAuth: boolean;
+  markTodoAsChecked: (todo: Todo, checked: boolean) => void;
+  addSubTask: (subtask: SubTask, parentTodoId: string) => void;
 }
 
 export const AuthContext = createContext<AuthContextProps>({
   authenticated: false,
-  setAuthenticated: () => {},
-  logout: () => {},
-  addTodo: () => {},
   verifyingAuth: true,
-});
+} as AuthContextProps);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -34,8 +34,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const userDataString = localStorage.getItem("TODO_APP");
     if (userDataString) {
       const userData = JSON.parse(userDataString);
+
       if (userData && userData.profile) {
-        setUser(userData.profile);
+        const userProfile = userData.profile;
+        const storedTodos = localStorage.getItem("todos");
+
+        if (storedTodos) {
+          const parsedTodos: Todo[] = JSON.parse(storedTodos);
+
+          lodash.set(userProfile, "todos", parsedTodos);
+        }
+        setUser(userProfile);
       }
     }
   }, [authenticated]);
@@ -43,7 +52,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const triggerAutoLogin = () => {
     getAccessToken()
       .then((authToken) => {
-        console.log({ authToken });
         if (authToken) {
           setAuthenticated(!!authToken);
         }
@@ -52,7 +60,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           const userData = JSON.parse(userDataString);
 
           if (userData && userData.profile) {
-            setUser(userData.profile);
+            const userProfile = userData.profile;
+            const storedTodos = localStorage.getItem("todos");
+
+            if (storedTodos) {
+              const parsedTodos: Todo[] = JSON.parse(storedTodos);
+
+              lodash.set(userProfile, "todos", parsedTodos);
+            }
+            setUser(userProfile);
           }
         }
         navigate("/dashboard");
@@ -73,7 +89,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const addTodo = (todo: Todo) => {
-    console.log({ todo, user });
     if (user) {
       const updatedUser = {
         ...user,
@@ -81,6 +96,54 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       };
       setUser(updatedUser);
     }
+  };
+
+  const addSubTask = (subtask: SubTask, parentTodoId: string) => {
+    if (user) {
+      const updatedUser = {
+        ...user,
+        todos: user.todos.map((todo: Todo) => {
+          if (todo.id === parentTodoId) {
+            return {
+              ...todo,
+              subTasks: [...todo.subTasks, subtask],
+            };
+          }
+          return todo;
+        }),
+      };
+      setUser(updatedUser);
+    }
+  };
+
+  useEffect(() => {
+    if (authenticated) {
+      if (lodash.get(user, "todos.length", 0) > 0) {
+        localStorage.setItem("todos", JSON.stringify(user?.todos));
+      }
+    }
+  }, [authenticated, user]);
+
+  const markTodoAsChecked = (todo: Todo, checked = true) => {
+    setUser((user) => {
+      if (user) {
+        const updatedUser = {
+          ...user,
+          todos: user.todos.map((t) => {
+            if (t.id === todo.id) {
+              return {
+                ...t,
+                completed: checked,
+              };
+            }
+            return t;
+          }),
+        };
+
+        return updatedUser;
+      }
+      return user;
+    });
   };
 
   return (
@@ -92,6 +155,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         logout,
         addTodo,
         verifyingAuth,
+        markTodoAsChecked,
+        addSubTask,
       }}
     >
       {children}
