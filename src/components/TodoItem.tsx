@@ -10,7 +10,7 @@ import AddSubtaskModal from "./AddSubtaskModal";
 import { OverlayTrigger } from "react-bootstrap";
 
 export const TodoItem: React.FC<{ todo: Todo }> = ({ todo }) => {
-  const { markTodoAsChecked, addSubTask, markSubtaskAsCompleted } =
+  const { markTodoAsChecked, addSubTask, markSubtaskAsCompleted, deleteTodo } =
     useContext(AuthContext);
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,6 +59,10 @@ export const TodoItem: React.FC<{ todo: Todo }> = ({ todo }) => {
     markSubtaskAsCompleted(subTask, todoId, checked);
   };
 
+  const handleDeleteTodo = (todoId: string) => {
+    deleteTodo(todoId);
+  };
+
   return (
     <div>
       <Card
@@ -88,7 +92,12 @@ export const TodoItem: React.FC<{ todo: Todo }> = ({ todo }) => {
               variant="danger"
               className="ml-2"
             >
-              <Dropdown.Item eventKey="3">Delete</Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => handleDeleteTodo(todo.id)}
+                eventKey="3"
+              >
+                Delete
+              </Dropdown.Item>
             </DropdownButton>
           </div>
         </Card.Body>

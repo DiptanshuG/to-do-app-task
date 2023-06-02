@@ -14,7 +14,12 @@ interface AuthContextProps {
   verifyingAuth: boolean;
   markTodoAsChecked: (todo: Todo, checked: boolean) => void;
   addSubTask: (subtask: SubTask, parentTodoId: string) => void;
-  markSubtaskAsCompleted: (subtask: SubTask, parentTodoId: string, checked: boolean) => void;
+  markSubtaskAsCompleted: (
+    subtask: SubTask,
+    parentTodoId: string,
+    checked: boolean
+  ) => void;
+  deleteTodo: (todoId: string) => void;
 }
 
 export const AuthContext = createContext<AuthContextProps>({
@@ -147,7 +152,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
-const markSubtaskAsCompleted=(subtask: SubTask, parentTodoId: string, checked = true) => {
+  const deleteTodo = (todoId: string) => {
+    setUser((user) => {
+      if (user) {
+        // Filter out the todo with the specified todoId
+        const updatedTodos = user.todos.filter((t) => t.id !== todoId);
+
+        // Update the user object with the updated todos
+        const updatedUser = {
+          ...user,
+          todos: updatedTodos,
+        };
+
+        // Save the updated todos to local storage
+        localStorage.setItem("todos", JSON.stringify(updatedTodos));
+
+        return updatedUser;
+      }
+      return user;
+    });
+  };
+
+  const markSubtaskAsCompleted = (
+    subtask: SubTask,
+    parentTodoId: string,
+    checked = true
+  ) => {
     setUser((user) => {
       if (user) {
         const updatedUser = {
@@ -175,9 +205,7 @@ const markSubtaskAsCompleted=(subtask: SubTask, parentTodoId: string, checked = 
       }
       return user;
     });
-}
-
-
+  };
 
   return (
     <AuthContext.Provider
@@ -190,7 +218,8 @@ const markSubtaskAsCompleted=(subtask: SubTask, parentTodoId: string, checked = 
         verifyingAuth,
         markTodoAsChecked,
         addSubTask,
-        markSubtaskAsCompleted
+        markSubtaskAsCompleted,
+        deleteTodo,
       }}
     >
       {children}
