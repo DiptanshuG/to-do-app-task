@@ -3,7 +3,21 @@ import { SubTask } from "../models/Todo";
 import { Card } from "react-bootstrap";
 import { BsCheck } from "react-icons/bs";
 
-export const NestedTodoItem: React.FC<{ subTask: SubTask }> = ({ subTask }) => {
+interface NestedTodoItemProps {
+  subTask: SubTask;
+  todoId: string;
+  markSubtaskAsCompleted: (subTask: SubTask, todoId: string, checked: boolean) => void;
+}
+
+export const NestedTodoItem: React.FC<NestedTodoItemProps> = ({
+  subTask,
+  todoId,
+  markSubtaskAsCompleted
+}) => {
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    markSubtaskAsCompleted(subTask, todoId, e.target.checked);
+  };
+
   return (
     <Card
       bg="secondary"
@@ -23,7 +37,7 @@ export const NestedTodoItem: React.FC<{ subTask: SubTask }> = ({ subTask }) => {
             className="mx-2"
             type="checkbox"
             checked={subTask.completed}
-            readOnly
+            onChange={handleCheckboxChange}
           />
           <span className="ml-2" style={{ marginTop: "2px" }}>
             {subTask.title}

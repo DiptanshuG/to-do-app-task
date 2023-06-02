@@ -14,6 +14,7 @@ interface AuthContextProps {
   verifyingAuth: boolean;
   markTodoAsChecked: (todo: Todo, checked: boolean) => void;
   addSubTask: (subtask: SubTask, parentTodoId: string) => void;
+  markSubtaskAsCompleted: (subtask: SubTask, parentTodoId: string, checked: boolean) => void;
 }
 
 export const AuthContext = createContext<AuthContextProps>({
@@ -146,6 +147,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
+const markSubtaskAsCompleted=(subtask: SubTask, parentTodoId: string, checked = true) => {
+    setUser((user) => {
+      if (user) {
+        const updatedUser = {
+          ...user,
+          todos: user.todos.map((t) => {
+            if (t.id === parentTodoId) {
+              return {
+                ...t,
+                subTasks: t.subTasks.map((sub) => {
+                  if (sub.id === subtask.id) {
+                    return {
+                      ...sub,
+                      completed: checked,
+                    };
+                  }
+                  return sub;
+                }),
+              };
+            }
+            return t;
+          }),
+        };
+
+        return updatedUser;
+      }
+      return user;
+    });
+}
+
+
+
   return (
     <AuthContext.Provider
       value={{
@@ -157,6 +190,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         verifyingAuth,
         markTodoAsChecked,
         addSubTask,
+        markSubtaskAsCompleted
       }}
     >
       {children}

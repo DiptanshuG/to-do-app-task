@@ -6,7 +6,7 @@ import { Form, Button, Row, Col, Alert, Toast } from "react-bootstrap";
 
 export const AddTodoForm: React.FC = () => {
   const [title, setTitle] = useState("");
-  const { addTodo, user } = useContext(AuthContext);
+  const { addTodo } = useContext(AuthContext);
   const [showToast, setShowToast] = useState(false);
 
   const handleAddTodo = (e: React.FormEvent<HTMLFormElement>) => {

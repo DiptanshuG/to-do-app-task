@@ -3,15 +3,15 @@ import { Todo, SubTask } from "../models/Todo";
 import { NestedTodoItem } from "./NestedTodoItem";
 import { Button, Form, Tooltip } from "react-bootstrap";
 import { Card, Dropdown, DropdownButton } from "react-bootstrap";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { BsStar, BsPencil, BsTrash } from "react-icons/bs";
+import { BsTrash } from "react-icons/bs";
 import { AuthContext } from "../context/AuthContext";
 import { v4 as uuidv4 } from "uuid";
 import AddSubtaskModal from "./AddSubtaskModal";
 import { OverlayTrigger } from "react-bootstrap";
 
 export const TodoItem: React.FC<{ todo: Todo }> = ({ todo }) => {
-  const { markTodoAsChecked, addSubTask } = useContext(AuthContext);
+  const { markTodoAsChecked, addSubTask, markSubtaskAsCompleted } =
+    useContext(AuthContext);
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     markTodoAsChecked(todo, e.target.checked);
@@ -51,6 +51,14 @@ export const TodoItem: React.FC<{ todo: Todo }> = ({ todo }) => {
 
   const tooltip = <Tooltip id={`tooltip-${todo.id}`}>Mark as complete</Tooltip>;
 
+  const handleMarkSubtaskAsCompleted = (
+    subTask: SubTask,
+    todoId: string,
+    checked: boolean
+  ) => {
+    markSubtaskAsCompleted(subTask, todoId, checked);
+  };
+
   return (
     <div>
       <Card
@@ -87,9 +95,13 @@ export const TodoItem: React.FC<{ todo: Todo }> = ({ todo }) => {
       </Card>
 
       <div>
-      
         {todo.subTasks.map((subTask: SubTask) => (
-          <NestedTodoItem key={subTask.id} subTask={subTask} />
+          <NestedTodoItem
+            key={subTask.id}
+            subTask={subTask}
+            todoId={todo.id} // Pass the todo.id as the todoId prop
+            markSubtaskAsCompleted={handleMarkSubtaskAsCompleted} // Pass the handler function
+          />
         ))}
       </div>
 
